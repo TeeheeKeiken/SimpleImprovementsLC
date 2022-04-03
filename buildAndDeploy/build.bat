@@ -11,10 +11,10 @@ for /F "tokens=*" %%a in ('git rev-parse --abbrev-ref HEAD') do set branch=%%a
 REM Disable echo for a bit so the output stays readable
 echo off
 for /F "tokens=*" %%a in ('git diff') do set diff=%%a
-set changesType=_local_
-if "%diff%"=="" set changesType=_
+set changesType=_local
+if "%diff%"=="" set changesType=
 echo on
-echo dev_%branch%%changesType%%commit% >> bin\SimpleImprovements.c4d\Version.txt
+echo dev_%branch%%changesType%_%commit% >> bin\SimpleImprovements.c4d\Version.txt
 
 REM Pack everything
 set /p c4group=<buildAndDeploy\c4group.path
