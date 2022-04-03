@@ -235,7 +235,6 @@ private func ExecutePickUpItem(id itemId, int count, bool specialInput)
 	{
 		var maxCount = GetMaxCount(IsItemSpecial(_pickUpIdMap[itemId][0]));
 		_pickUpRepetitions = Min(count - 1, maxCount);
-		CloseMenu();
 	}
 
 	return PickUpItem(itemId, specialInput);
@@ -266,7 +265,7 @@ protected func Ejection()
 	{
 		GetItemsInRangeMappedById();
 		PickUpItem(_itemIdSlatedForPickUp);
-		if (GetMenu() != PUIS && _pickUpRepetitions <= 0)
+		if (GetMenu() != PUIS)
 		{
 			CreatePickUpMenu();
 		}
@@ -276,6 +275,11 @@ protected func Ejection()
 protected func Collection2()
 {
 	_inherited();
+	
+	if (_itemIdSlatedForPickUp != nil)
+	{
+		_pickUpRepetitions--;
+	}
 
 	if (_pickUpRepetitions > 0)
 	{
@@ -290,7 +294,6 @@ protected func Collection2()
 		else
 		{
 			PickUpItem(_itemIdSlatedForPickUp, true);
-			_pickUpRepetitions--;
 		}
 	}
 
