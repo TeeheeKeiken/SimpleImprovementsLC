@@ -90,23 +90,6 @@ private func CreateDropMenu()
 	}
 }
 
-private func GetFilteredContentsCount(bool isSpecial, id exceptedId)
-{
-	var item;
-	var count = 0;
-	var idMap = { };
-	for (var i = 0; item = Contents(i); i++)
-	{
-		if (GetID(item) != exceptedId &&
-			IsSpecialItem(item) == isSpecial)
-		{
-			count++;
-		}
-	}
-
-	return count;
-}
-
 private func TryGetSingleOtherEquivalentItemId(object pickUpItem, id& singleOtherEquivalentItemId)
 {
 	var isPickUpItemSpecial = IsSpecialItem(pickUpItem);
