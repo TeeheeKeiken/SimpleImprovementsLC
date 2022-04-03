@@ -18,13 +18,6 @@ public func RejectCollect(id idObject, object pObject)
 	return _inherited(idObject, pObject);
 }
 
-// HACK: We need IsSpecialItem for swapping logic, but it is not 
-// public, so we have to access it with PrivateCall instead.
-public func IsItemSpecial(object item)
-{
-	return PrivateCall(this, "IsSpecialItem", item);
-}
-
 protected func Initialize()
 {
 	_pickUpRepetitions = 0;
@@ -90,7 +83,7 @@ private func CreateDropMenu()
 	for (var id in GetKeys(dropIdMap))
 	{
 		var items = dropIdMap[id];
-		if (id != _itemIdSlatedForPickUp && IsItemSpecial(_itemSlatedForPickUp) == IsItemSpecial(items[0]))
+		if (id != _itemIdSlatedForPickUp && IsSpecialItem(_itemSlatedForPickUp) == IsSpecialItem(items[0]))
 		{
 			AddMenuItem("$DropMenuEntryDropPs$", "ExecuteDropItem", id, this, GetLength(items));
 		}
@@ -105,7 +98,7 @@ private func GetFilteredContentsCount(bool isSpecial, id exceptedId)
 	for (var i = 0; item = Contents(i); i++)
 	{
 		if (GetID(item) != exceptedId &&
-			IsItemSpecial(item) == isSpecial)
+			IsSpecialItem(item) == isSpecial)
 		{
 			count++;
 		}
@@ -116,7 +109,7 @@ private func GetFilteredContentsCount(bool isSpecial, id exceptedId)
 
 private func TryGetSingleOtherEquivalentItemId(object pickUpItem, id& singleOtherEquivalentItemId)
 {
-	var isPickUpItemSpecial = IsItemSpecial(pickUpItem);
+	var isPickUpItemSpecial = IsSpecialItem(pickUpItem);
 	var pickUpItemId = GetID(pickUpItem);
 
 	var item;
@@ -125,7 +118,7 @@ private func TryGetSingleOtherEquivalentItemId(object pickUpItem, id& singleOthe
 	{
 		var itemId = GetID(item);
 		if (itemId != pickUpItemId &&
-			IsItemSpecial(item) == isPickUpItemSpecial)
+			IsSpecialItem(item) == isPickUpItemSpecial)
 		{
 			idMap[itemId] = itemId;
 		}
@@ -233,7 +226,7 @@ private func ExecutePickUpItem(id itemId, int count, bool specialInput)
 {
 	if (specialInput)
 	{
-		var maxCount = GetMaxCount(IsItemSpecial(_pickUpIdMap[itemId][0]));
+		var maxCount = GetMaxCount(IsSpecialItem(_pickUpIdMap[itemId][0]));
 		_pickUpRepetitions = Min(count - 1, maxCount);
 	}
 
