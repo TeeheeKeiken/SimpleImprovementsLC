@@ -43,6 +43,10 @@ private func GetItemsInRangeMappedById()
 	_pickUpIdMap = {};
 	for (var item in itemsInRange)
 	{
+		if (item->~RejectEntrance(this))
+		{
+			continue;
+		}
 		var items = _pickUpIdMap[GetID(item)] ?? [];
 		items[] = item;
 		_pickUpIdMap[GetID(item)] = items;
