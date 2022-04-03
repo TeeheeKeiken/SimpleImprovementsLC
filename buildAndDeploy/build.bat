@@ -12,7 +12,7 @@ REM Disable echo for a bit so the output stays readable
 echo off
 for /F "tokens=*" %%a in ('git diff') do set diff=%%a
 set changesType=_local_
-if "%diff%"=="" set changesType=
+if "%diff%"=="" set changesType=_
 echo on
 echo dev_%branch%%changesType%%commit% >> bin\SimpleImprovements.c4d\Version.txt
 
