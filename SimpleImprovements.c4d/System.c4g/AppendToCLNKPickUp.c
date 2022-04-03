@@ -8,6 +8,8 @@ local _itemIdSlatedForPickUp;
 local _itemSlatedForPickUp;
 local _pickUpRepetitions;
 
+local _previousPickUpMenuItemSelection;
+
 public func RejectCollect(id idObject, object pObject)
 {
 	if (_itemIdSlatedForPickUp != nil && idObject != _itemIdSlatedForPickUp)
@@ -68,7 +70,7 @@ private func ExecuteDropItem(id itemId)
 
 private func CreateDropMenu()
 {
-	var pickupMenu = CreateMenu(_itemIdSlatedForPickUp, this, this, C4MN_Extra_None, "$DropMenuNothingToDrop$", nil, C4MN_Style_Normal, false);
+	var pickupMenu = CreateMenu(_itemIdSlatedForPickUp, this, this, C4MN_Extra_None, "$DropMenuNothingToDrop$", nil, C4MN_Style_Normal, false, DPIS);
 
 	var dropIdMap = {};
 	for (var i = 0; i < ContentsCount(); i++)
@@ -168,7 +170,37 @@ private func PickUpItem(id itemId, bool skipDropMenu)
 
 	_itemIdSlatedForPickUp = closestItemId;
 	_itemSlatedForPickUp = closestItem.Ref;
+	RememberSelectedPickUpMenuItem();
 	return CreateDropMenu();
+}
+
+private func RememberSelectedPickUpMenuItem()
+{
+	var selectedMenuItemId = GetMenuSelection();
+	_previousPickUpMenuItemSelection =
+	{
+		Index = GetMenuSelection(),
+		ItemId = GetKeys(_pickUpIdMap)[selectedMenuItemId]
+	};
+}
+
+private func SelectPickUpMenuItem(int oldSelectedMenuItemId, id selectedItemId)
+{
+	var pickUpIds = GetKeys(_pickUpIdMap);
+	var newSelectedMenuItemId = GetIndexOf(selectedItemId, pickUpIds);
+
+	if (newSelectedMenuItemId < 0)
+	{
+		newSelectedMenuItemId = Min(oldSelectedMenuItemId, GetLength(pickUpIds) - 1);
+	}
+
+	SelectMenuItem(newSelectedMenuItemId);
+}
+
+private func SelectRememberedPickUpMenuItem()
+{
+	SelectPickUpMenuItem(_previousPickUpMenuItemSelection.Index, _previousPickUpMenuItemSelection.ItemId);
+	_previousPickUpMenuItemSelection = nil;
 }
 
 private func RefreshPickUpMenu()
@@ -184,15 +216,7 @@ private func RefreshPickUpMenu()
 		AddMenuItem("$PickUpMenuEntryPickUpPs$", "ExecutePickUpItem", GetID(items[0]), this, itemsCount, itemsCount);
 	}
 
-	var pickUpIds = GetKeys(_pickUpIdMap);
-	var newSelectedMenuItemId = GetIndexOf(selectedItemId, pickUpIds);
-
-	if (newSelectedMenuItemId < 0)
-	{
-		newSelectedMenuItemId = Min(oldSelectedMenuItemId, GetLength(pickUpIds) - 1);
-	}
-
-	SelectMenuItem(newSelectedMenuItemId);
+	SelectPickUpMenuItem(oldSelectedMenuItemId, selectedItemId);
 }
 
 private func GetMaxCount(bool isSpecial)
@@ -244,6 +268,7 @@ protected func Ejection()
 		if (GetMenu() != PUIS)
 		{
 			CreatePickUpMenu();
+			SelectRememberedPickUpMenuItem();
 		}
 	}
 }
@@ -282,4 +307,18 @@ protected func Collection2()
 	{
 		RefreshPickUpMenu();
 	}
+}
+
+protected func MenuQueryCancel(int selection, object menu)
+{
+	if (GetMenu() == DPIS)
+	{
+		CloseMenu();
+		GetItemsInRangeMappedById();
+		CreatePickUpMenu();
+		SelectRememberedPickUpMenuItem();
+		return true;
+	}
+
+	return _inherited();
 }
