@@ -1,0 +1,2 @@
+call buildAndDeploy
+call debugScenario

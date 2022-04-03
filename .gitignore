@@ -362,6 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Local build and deploy paths
+# Local build, deploy and debug paths
 c4group.path
 deploy.path
+clonk.path
+scenario.path
