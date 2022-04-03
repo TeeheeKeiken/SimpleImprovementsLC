@@ -1,0 +1,5 @@
+ContextPickUp=Aufheben
+DropMenuEntryDropPs=%s ablegen.
+DropMenuNothingToDrop=Nichts zum Ablegen.
+PickUpMenuEntryPickUpPs=%s aufheben.
+PickUpMenuNothingToPickUp=Nichts zum Aufheben.
