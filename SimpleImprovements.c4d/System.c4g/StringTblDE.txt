@@ -1,4 +1,5 @@
 ContextPickUp=Aufheben
+ContextPickUpThis=Aufheben
 DropMenuEntryDropPs=%s ablegen.
 DropMenuNothingToDrop=Nichts zum Ablegen.
 PickUpMenuEntryPickUpPs=%s aufheben.

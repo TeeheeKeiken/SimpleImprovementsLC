@@ -1,4 +1,5 @@
 ContextPickUp=Pick up
+ContextPickUpThis=Pick up
 DropMenuEntryDropPs=Drop %s.
 DropMenuNothingToDrop=Nothing to drop.
 PickUpMenuEntryPickUpPs=Pick up %s.
