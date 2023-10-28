@@ -1,0 +1,2 @@
+MsgGoalFulfilled=%d Siegespunkte erreicht!
+MsgGoalUnfulfilled=%d Siegespunkte von %d erreicht.
