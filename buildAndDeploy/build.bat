@@ -5,7 +5,8 @@ rmdir bin\SimpleImprovements.c4d /s /q
 del bin /s /q
 xcopy SimpleImprovements.c4d bin\SimpleImprovements.c4d /i /s /e /y /v
 
-REM Set Version.txt to current branch name, if there are local changes, and the last commit date and hash
+REM Version format without local changes: 	"dev_<branch>_<lastcommitdate>_<commithash>"
+REM Version format with local changes:		"dev_<branch>_local_<lastcommitdate>_<commithash>"
 for /F "tokens=*" %%a in ('git log -1 --format^="%%ad_%%H" --date^=iso-strict') do set commit=%%a
 for /F "tokens=*" %%a in ('git rev-parse --abbrev-ref HEAD') do set branch=%%a
 REM Disable echo for a bit so the output stays readable
