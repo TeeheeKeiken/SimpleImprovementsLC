@@ -1,4 +1,4 @@
-﻿/*-- Pick Up Menu / Swap Menu on collectibles  --*/
+﻿/*-- Pick Up Menu / Swap Menu on collectibles --*/
 
 #strict 3
 #appendto *
