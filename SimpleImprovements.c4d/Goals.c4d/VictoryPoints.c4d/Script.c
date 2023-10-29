@@ -42,14 +42,14 @@ public func IsFulfilled()
 	return totalVictoryPoints >= RequiredVictoryPoints;
 }
 
-protected func Activate(player)
+protected func Activate(playerId)
 {
 	if (IsFulfilled())
 	{
-		return (MessageWindow(Format("$MsgGoalFulfilled$", RequiredVictoryPoints), player));
+		return (MessageWindow(Format("$MsgGoalFulfilled$", RequiredVictoryPoints), playerId));
 	}
 
-	MessageWindow(Format("$MsgGoalUnfulfilled$", , RequiredVictoryPoints), player);
+	MessageWindow(Format("$MsgGoalUnfulfilled$", CalculateVictoryPointsForPlayer(playerId), RequiredVictoryPoints), playerId);
 	return true;
 }
 
