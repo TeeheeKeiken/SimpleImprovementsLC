@@ -9,7 +9,7 @@ public func Initialize()
 {
 	ValueWeight = 1000;
 
-	return (inherited());
+	return inherited();
 }
 
 public func CalculateVictoryPointsForPlayer(int playerId)

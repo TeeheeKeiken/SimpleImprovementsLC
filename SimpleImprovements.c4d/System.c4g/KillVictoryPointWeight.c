@@ -12,7 +12,7 @@ public func Initialize()
 	KillWeight = 5;
 	ISB_SI_PlayerKillCountMap = [];
 
-	return (inherited());
+	return inherited();
 }
 
 public func CalculateVictoryPointsForPlayer(int playerId)

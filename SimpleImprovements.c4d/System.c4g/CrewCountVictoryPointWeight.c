@@ -9,7 +9,7 @@ public func Initialize()
 {
 	CrewCountWeight = 5;
 
-	return (inherited());
+	return inherited();
 }
 
 public func CalculateVictoryPointsForPlayer(int playerId)

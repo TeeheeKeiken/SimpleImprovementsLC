@@ -16,7 +16,7 @@ protected func Initialize()
 
 	// Set required victory points
 	RequiredVictoryPoints = 1;
-	return (inherited());
+	return inherited();
 }
 
 /*-- Competitive --*/
@@ -25,7 +25,7 @@ public func IsFulfilledforPlr(int playerId)
 	// TODO: Consider teams
 	var playerVictoryPoints = CalculateVictoryPointsForPlayer(playerId);
 
-	return (playerVictoryPoints >= RequiredVictoryPoints);
+	return playerVictoryPoints >= RequiredVictoryPoints;
 }
 
 /*-- Cooperative --*/
@@ -39,7 +39,7 @@ public func IsFulfilled()
 		totalVictoryPoints += CalculateVictoryPointsForPlayer(playerId);
 	}
 
-	return (totalVictoryPoints >= RequiredVictoryPoints);
+	return totalVictoryPoints >= RequiredVictoryPoints;
 }
 
 protected func Activate(player)
