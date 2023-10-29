@@ -40,10 +40,11 @@ protected func Initialize()
 
 private func GetItemsInRangeMappedById()
 {
+	var offsetY = GetDefOffset(GetID(), 1);
 	var collectionLeft = GetDefCollection(GetID(), 0);
-	var collectionTop = GetDefCollection(GetID(), 1);
+	var collectionTop = GetDefCollection(GetID(), 1) + offsetY;
 	var collectionWidth = GetDefCollection(GetID(), 2);
-	var collectionHeight = GetDefCollection(GetID(), 3);
+	var collectionHeight = GetDefCollection(GetID(), 3) - offsetY;
 
 	var itemsInRange = FindObjects(
 		Find_Exclude(this),
@@ -52,6 +53,7 @@ private func GetItemsInRangeMappedById()
 		Find_NoContainer());
 
 	_pickUpIdMap = {};
+	DebugLog("Cleared _pickUpIdMap.");
 	for (var item in itemsInRange)
 	{
 		if (item->~RejectEntrance(this))
@@ -77,10 +79,15 @@ private func DropItem(id itemId)
 	AppendCommand(this, "Drop");
 }
 
-private func ExecuteDropItem(id itemId)
+private func SwapItem(id itemId)
 {
 	DropItem(itemId);
-	return true;
+	return AppendCommand(this, "Call", this, _pickUpClosestItemInRange, nil, _itemSlatedForPickUp, nil, "CommandPickUpItem");
+}
+
+private func ExecuteDropItem(id itemId)
+{
+	return SwapItem(itemId);
 }
 
 private func CreateDropMenu()
@@ -155,7 +162,26 @@ private func PickUpClosestItem(id itemId, bool skipDropMenu)
 		Distance = nil
 	};
 
-	for (var item in _pickUpIdMap[itemId])
+	var items = nil;
+	var tries = 0;
+	while (items == nil)
+	{
+		DebugLog("Found no valid items to pick up for %i, retrying. (Try: %d)", itemId, tries + 1);
+		var items = _pickUpIdMap[itemId];
+
+		if (items == nil)
+		{
+			RefreshPickUpMenu();
+		}
+
+		if (tries++ >= 3)
+		{
+			DebugLog("Abort picking up items: Reached maximum tries.");
+			return false;
+		}
+	}
+
+	for (var item in items)
 	{
 		var distance = ObjectDistance(item);
 		if (closestItem.Distance == nil || closestItem.Distance > distance)
@@ -165,7 +191,8 @@ private func PickUpClosestItem(id itemId, bool skipDropMenu)
 		}
 	}
 
-	return PickUpItem(closestItem.Ref, skipDropMenu);
+	PickUpItem(closestItem.Ref, skipDropMenu);
+	return true;
 }
 
 private func PickUpItem(object item, bool skipDropMenu)
@@ -173,6 +200,7 @@ private func PickUpItem(object item, bool skipDropMenu)
 	var itemId = GetID(item);
 	var singleOtherEquivalentItemId = nil;
 
+	DebugLog("Trying to pick up %v. (Repetition: %d)", item, _pickUpRepetitions);
 	if ((MaxContentsCount() == 1 && GetMaxSpecialCount(0, 0) == nil) ||
 		!RejectCollect(itemId, item) ||
 		TryGetSingleOtherEquivalentItemId(item, singleOtherEquivalentItemId) ||
@@ -180,16 +208,13 @@ private func PickUpItem(object item, bool skipDropMenu)
 	{
 		if (singleOtherEquivalentItemId != nil)
 		{
-			// HACK: Delayed drop and get because shifting doesn't finish before the 
-			// get-command begins, and we can't wait for commands.
 			_itemIdSlatedForPickUp = itemId;
 			_itemSlatedForPickUp = item;
 			_pickUpClosestItemInRange = true;
-			return DropItem(singleOtherEquivalentItemId);
+			return SwapItem(singleOtherEquivalentItemId);
 		}
 		return AppendCommand(this, "Get", item);
 	}
-
 	_itemIdSlatedForPickUp = itemId;
 	_itemSlatedForPickUp = item;
 	_pickUpClosestItemInRange = true;
@@ -257,7 +282,8 @@ private func ExecutePickUpClosestItem(id itemId, int count, bool specialInput)
 	if (specialInput)
 	{
 		var maxCount = GetMaxCount(IsSpecialItem(_pickUpIdMap[itemId][0]));
-		_pickUpRepetitions = Min(count - 1, maxCount);
+		var alreadyHeldCount = ContentsCount(itemId, this);
+		_pickUpRepetitions = Min(count, maxCount - alreadyHeldCount);
 	}
 
 	return PickUpClosestItem(itemId, specialInput);
@@ -278,39 +304,27 @@ protected func ContextPickUp()
 	return true;
 }
 
-protected func Ejection()
+private func CommandPickUpItem(object source, bool pickUpClosestItem, _, object itemSlatedForPickUp)
 {
-	_inherited();
-
-	// HACK: We can't wait for the drop-command to finish
-	// so we intervene when an item is dropped.
-	if (_itemIdSlatedForPickUp != nil)
+	if (pickUpClosestItem)
 	{
-		if (_pickUpClosestItemInRange)
+		GetItemsInRangeMappedById();
+		PickUpClosestItem(_itemIdSlatedForPickUp);
+		if (GetMenu() != PUIS && IsPickUpPossible() && _previousPickUpMenuItemSelection != nil)
 		{
-			GetItemsInRangeMappedById();
-			PickUpClosestItem(_itemIdSlatedForPickUp);
-			if (GetMenu() != PUIS && IsPickUpPossible() && _previousPickUpMenuItemSelection != nil)
-			{
-				CreatePickUpMenu();
-				SelectRememberedPickUpMenuItem();
-			}
+			CreatePickUpMenu();
+			SelectRememberedPickUpMenuItem();
 		}
-		else
-		{
-			PickUpItem(_itemSlatedForPickUp, true);
-		}
+	}
+	else
+	{
+		PickUpItem(itemSlatedForPickUp, true);
 	}
 }
 
 protected func Collection2()
 {
 	_inherited();
-	
-	if (_itemIdSlatedForPickUp != nil)
-	{
-		_pickUpRepetitions--;
-	}
 
 	if (_pickUpRepetitions > 0)
 	{
@@ -320,11 +334,17 @@ protected func Collection2()
 			singleOtherEquivalentItemId == nil &&
 			RejectCollect(_itemIdSlatedForPickUp, _itemSlatedForPickUp))
 		{
+			DebugLog("Exausted all valid pick ups, aborting at %d remaining repititions.", _pickUpRepetitions);
 			_pickUpRepetitions = 0;
 		}
 		else
 		{
-			PickUpClosestItem(_itemIdSlatedForPickUp, true);
+			DebugLog("Trying to pick up %i. (Repititions: %d)", _itemIdSlatedForPickUp, _pickUpRepetitions);
+			if (PickUpClosestItem(_itemIdSlatedForPickUp, true))
+			{
+				_pickUpRepetitions--;
+				DebugLog("Picked up %i. (Remaining repititions: %d)", _itemIdSlatedForPickUp, _pickUpRepetitions);
+			}
 		}
 	}
 
