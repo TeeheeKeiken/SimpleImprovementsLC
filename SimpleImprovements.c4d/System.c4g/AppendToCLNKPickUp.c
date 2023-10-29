@@ -174,7 +174,7 @@ private func PickUpClosestItem(id itemId, bool skipDropMenu)
 			RefreshPickUpMenu();
 		}
 
-		if (tries++ >= 3)
+		if (++tries >= 3)
 		{
 			DebugLog("Abort picking up items: Reached maximum tries.");
 			return false;
@@ -279,11 +279,13 @@ private func GetMaxCount(bool isSpecial)
 
 private func ExecutePickUpClosestItem(id itemId, int count, bool specialInput)
 {
+	DebugLog("Got input to pick up %i.", itemId);
 	if (specialInput)
 	{
 		var maxCount = GetMaxCount(IsSpecialItem(_pickUpIdMap[itemId][0]));
 		var alreadyHeldCount = ContentsCount(itemId, this);
 		_pickUpRepetitions = Min(count, maxCount - alreadyHeldCount);
+		DebugLog("Picking up %d.", _pickUpRepetitions);
 	}
 
 	return PickUpClosestItem(itemId, specialInput);
@@ -334,7 +336,7 @@ protected func Collection2()
 			singleOtherEquivalentItemId == nil &&
 			RejectCollect(_itemIdSlatedForPickUp, _itemSlatedForPickUp))
 		{
-			DebugLog("Exausted all valid pick ups, aborting at %d remaining repititions.", _pickUpRepetitions);
+			DebugLog("Exhausted all valid pick ups, aborting at %d remaining repititions.", _pickUpRepetitions);
 			_pickUpRepetitions = 0;
 		}
 		else
