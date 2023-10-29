@@ -3,6 +3,9 @@
 #strict 3
 #appendto CLNK
 
+/*-- Pandoras Strike Compatibility --*/
+#appendto WIEF nowarn
+
 static ISB_SI_PlayerKillCountMap;
 
 protected func Death()
