@@ -166,11 +166,11 @@ private func PickUpClosestItem(id itemId, bool skipDropMenu)
 	var tries = 0;
 	while (items == nil)
 	{
-		DebugLog("Found no valid items to pick up for %i, retrying. (Try: %d)", itemId, tries + 1);
 		var items = _pickUpIdMap[itemId];
 
 		if (items == nil)
 		{
+			DebugLog("Found no valid items to pick up for %i, retrying. (Try: %d)", itemId, tries + 1);
 			RefreshPickUpMenu();
 		}
 
