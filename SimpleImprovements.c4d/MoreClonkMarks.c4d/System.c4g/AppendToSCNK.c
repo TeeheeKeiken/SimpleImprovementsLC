@@ -1,4 +1,4 @@
-﻿/*-- Clonk Mars Spaceclonk --*/
+/*-- Clonk Mars Spaceclonk --*/
 
 #strict 3
 #appendto SCNK
