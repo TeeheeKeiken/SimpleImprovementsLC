@@ -5,7 +5,14 @@
 
 protected func FxO2Timer()
 {
+	var previousO2 = O2;
+
 	_inherited();
+
+	if (previousO2 > 0 && O2 <= 0)
+	{
+		Sound("Warning_lowoxygen2", true, nil, 0, GetOwner() + 1);
+	}
 
 	if (!GetAlive(this))
 	{
