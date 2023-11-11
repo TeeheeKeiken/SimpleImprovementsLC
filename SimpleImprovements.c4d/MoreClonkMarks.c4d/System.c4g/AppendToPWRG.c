@@ -1,5 +1,4 @@
 /*-- Clonk Mars Power Generator --*/
-/*-- TODO: Move to separate object folder --*/
 
 #strict 3
 #appendto PWRG nowarn

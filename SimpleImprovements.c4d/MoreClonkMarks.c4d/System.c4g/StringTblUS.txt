@@ -1,0 +1,2 @@
+ContextShowStoredEnergy=Show stored energy
+ShowStoredEnergyMessage=Currently stored: %d kWh|Capacity: %d kWh
