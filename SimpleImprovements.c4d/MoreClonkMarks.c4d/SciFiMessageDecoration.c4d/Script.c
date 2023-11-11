@@ -1,5 +1,7 @@
 /*-- Sci-Fi Message Decoration --*/
 
+#strict 3
+
 protected func FrameDecorationBorderTop()
 {
 	return 0;
