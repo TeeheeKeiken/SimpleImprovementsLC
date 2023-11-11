@@ -3,6 +3,18 @@
 #strict 3
 #appendto SCNK
 
+static ISB_MCM_DisableBonusKnowledge;
+
+protected func Initialize()
+{
+	if (!ISB_MCM_DisableBonusKnowledge)
+	{
+		SetPlrKnowledge(GetOwner(), RTEG);
+	}
+
+	return _inherited();
+}
+
 protected func FxO2Timer()
 {
 	var previousO2 = O2;
@@ -62,7 +74,7 @@ private func HandleLowO2Warning()
 private func ShowO2WarningMessages()
 {
 	var o2Color = GetWarningColor(O2, 30);
-	var playerColor = GetColorDw(this);
+	var playerColor = GetColorDw();
 
 	CustomMessage(Format("<c %x>o2</c>: <c %x>%d%%</c>", playerColor, o2Color, O2), this, NO_OWNER);
 
@@ -72,9 +84,9 @@ private func ShowO2WarningMessages()
 		var message = Format(
 			"$LowOnOxygen$",
 			playerColor,
-			GetName(this));
+			GetName());
 
-		var portrait = Format("Portrait:%i::%x::%s", GetID(this), playerColor, GetPortrait(this, false, false));
+		var portrait = Format("Portrait:%i::%x::%s", GetID(), playerColor, GetPortrait(this, false, false));
 
 		CustomMessage(
 			message,
