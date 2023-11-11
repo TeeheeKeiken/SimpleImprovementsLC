@@ -4,3 +4,5 @@ DropMenuEntryDropPs=Drop %s.
 DropMenuNothingToDrop=Nothing to drop.
 PickUpMenuEntryPickUpPs=Pick up %s.
 PickUpMenuNothingToPickUp=Nothing to pick up.
+ContextShowStoredEnergy=Show stored energy
+ShowStoredEnergyMessage=Currently stored: %d kWh|Capacity: %d kWh

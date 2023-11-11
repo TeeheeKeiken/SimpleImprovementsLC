@@ -4,3 +4,5 @@ DropMenuEntryDropPs=%s ablegen.
 DropMenuNothingToDrop=Nichts zum Ablegen.
 PickUpMenuEntryPickUpPs=%s aufheben.
 PickUpMenuNothingToPickUp=Nichts zum Aufheben.
+ContextShowStoredEnergy=Aktuell gespeicherte Energie anzeigen
+ShowStoredEnergyMessage=Aktuell gespeichert: %d kWh|Kapazität: %d kWh
