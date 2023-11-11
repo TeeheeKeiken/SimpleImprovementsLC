@@ -3,7 +3,7 @@
 #strict 3
 
 #include PWRG // Generates power
-#include B_50
+#include B_95
 #include DACT // Damage control
 
 local _energyProduction;
