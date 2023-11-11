@@ -20,6 +20,7 @@ Construction=1
 Value=700
 Mass=1000
 ColorByOwner=1
+Version=4.9.10.15
 
 [Physical]
 Energy=1500000
