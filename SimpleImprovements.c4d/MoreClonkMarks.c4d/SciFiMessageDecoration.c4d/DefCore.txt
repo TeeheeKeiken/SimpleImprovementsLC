@@ -1,0 +1,6 @@
+[DefCore]
+id=SFMD
+Name=Sci-Fi Message Decoration
+Category=C4D_StaticBack
+Picture=0,0,12,12
+Version=4.9.10.15

@@ -1,4 +1,4 @@
-/*-- Clonk Mars Spaceclonk --*/
+﻿/*-- Clonk Mars Spaceclonk --*/
 
 #strict 3
 #appendto SCNK
@@ -8,6 +8,11 @@ protected func FxO2Timer()
 	var previousO2 = O2;
 
 	_inherited();
+
+	if (LowO2())
+	{
+		ShowO2WarningMessages();
+	}
 
 	if (previousO2 > 0 && O2 <= 0)
 	{
@@ -27,6 +32,14 @@ protected func FxO2Stop(object pTarget, int iEffectNumber, int iReason, bool fTe
 	HandleLowO2Warning();
 }
 
+private func GetWarningColor(int current, int expected)
+{
+	var red = 255 << 16;
+	var green = (255 * current / expected) << 8;
+	var blue = 0;
+	return red + green + blue;
+}
+
 private func HandleLowO2Warning()
 {
 	var amountOfOtherLowO2Clonks = ObjectCount2(
@@ -43,5 +56,35 @@ private func HandleLowO2Warning()
 	else
 	{
 		Sound("Warning_lowoxygen", true, nil, 0, GetOwner() + 1, +1);
+	}
+}
+
+private func ShowO2WarningMessages()
+{
+	var o2Color = GetWarningColor(O2, 30);
+	var playerColor = GetColorDw(this);
+
+	CustomMessage(Format("<c %x>o2</c>: <c %x>%d%%</c>", playerColor, o2Color, O2), this, NO_OWNER);
+
+	var cursor = GetCursor(GetOwner());
+	if (cursor != this)
+	{
+		var message = Format(
+			"$LowOnOxygen$",
+			playerColor,
+			GetName(this));
+
+		var portrait = Format("Portrait:%i::%x::%s", GetID(this), playerColor, GetPortrait(this, false, false));
+
+		CustomMessage(
+			message,
+			nil,
+			GetOwner(),
+			0,
+			25,
+			0xffffff,
+			SFMD,
+			portrait,
+			MSG_Top | MSG_HCenter | MSG_YRel);
 	}
 }

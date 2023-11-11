@@ -1,2 +1,3 @@
 ContextShowStoredEnergy=Show stored energy
 ShowStoredEnergyMessage=Currently stored: %d kWh|Capacity: %d kWh
+LowOnOxygen=<c %x>%s</c> is low on oxygen!

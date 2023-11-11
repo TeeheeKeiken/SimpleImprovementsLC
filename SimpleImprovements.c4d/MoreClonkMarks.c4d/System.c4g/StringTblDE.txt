@@ -1,2 +1,3 @@
 ContextShowStoredEnergy=Aktuell gespeicherte Energie anzeigen
 ShowStoredEnergyMessage=Aktuell gespeichert: %d kWh|Kapazität: %d kWh
+LowOnOxygen=<c %x>%s</c> hat wenig Sauerstoff!
