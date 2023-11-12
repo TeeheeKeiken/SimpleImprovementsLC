@@ -147,18 +147,19 @@ private func UpdateResourceDisplay(int playerId)
 	for (var itemId, count in resourceInfoMap)
 	{
 		var format;
-
+		
+		var color = ISB_SI_GetResourceColorModulation(itemId);
 		if (count > 0)
 		{
 			format = "%s %s %d";
 		}
 		else
 		{
+			color = GetBlendedColor(color ?? 0xffffff, 0x646464);
 			format = "%s %s <c 8a8a8a>%d</c>";
 		}
 
 		var icon;
-		var color = ISB_SI_GetResourceColorModulation(itemId);
 		if (color == nil)
 		{
 			icon = Format("{{%i}}", itemId);
@@ -175,4 +176,21 @@ private func UpdateResourceDisplay(int playerId)
 	{
 		CustomMessage(message, nil, friendlyPlayerId, -300 - (40 * GetLength(GetKeys(resourceInfoMap))), 24, 0xffffff, nil, "Portrait", MSG_Right);
 	}
+}
+
+private func GetBlendedColor(int colorA, int colorB)
+{
+	var redA = colorA >> 16;
+	var greenA = colorA & 0x00ff00 >> 8;
+	var blueA = colorA & 0x0000ff;
+
+	var redB = colorB >> 16;
+	var greenB = colorB & 0x00ff00 >> 8;
+	var blueB = colorB & 0x0000ff;
+
+	var blendedRed = (redA + redB) / 2;
+	var blendedGreen = (greenA + greenB) / 2;
+	var blendedBlue = (blueA + blueB) / 2;
+
+	return RGB(blendedRed, blendedGreen, blendedBlue);
 }
