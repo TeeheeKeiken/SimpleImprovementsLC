@@ -12,7 +12,7 @@ global func ISB_SI_GetResourceColorModulation(id itemId)
 
 public func Collection2(object item)
 {
-	if (item->~ISB_IS_IsResource())
+	if (item->~ISB_SI_IsResource())
 	{
 		IncreaseResourceCount(GetOwner(), item);
 	}
@@ -22,7 +22,7 @@ public func Collection2(object item)
 
 protected func Ejection(object obj)
 {
-	if (obj->~ISB_IS_IsResource())
+	if (obj->~ISB_SI_IsResource())
 	{
 		DecreaseResourceCount(GetOwner(), obj);
 	}
@@ -42,7 +42,7 @@ protected func Destruction()
 
 protected func ContentsDestruction(object obj)
 {
-	if (obj->~ISB_IS_IsResource())
+	if (obj->~ISB_SI_IsResource())
 	{
 		DecreaseResourceCount(GetOwner(), obj);
 	}

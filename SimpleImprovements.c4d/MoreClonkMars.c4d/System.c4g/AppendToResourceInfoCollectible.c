@@ -23,7 +23,7 @@
 #appendto PIKT
 #appendto WIRO
 
-public func ISB_IS_IsResource()
+public func ISB_SI_IsResource()
 {
 	return true;
 }
