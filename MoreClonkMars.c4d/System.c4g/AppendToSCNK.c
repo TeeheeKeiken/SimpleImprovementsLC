@@ -123,11 +123,10 @@ private func ShowO2WarningMessages()
 			message,
 			nil,
 			GetOwner(),
-			0,
-			25,
+			245,
+			55,
 			0xffffff,
 			SFMD,
-			portrait,
-			MSG_Top | MSG_HCenter | MSG_YRel);
+			portrait);
 	}
 }
