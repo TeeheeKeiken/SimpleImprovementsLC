@@ -181,7 +181,16 @@ private func UpdateResourceDisplay(int playerId)
 
 	for (var friendlyPlayerId in friendlyPlayerIds)
 	{
-		CustomMessage(message, nil, friendlyPlayerId, -300 - (40 * GetLength(GetKeys(resourceInfoMap))), 24, 0xffffff, nil, "Portrait", MSG_Right);
+		CustomMessage(
+			message,
+			nil,
+			friendlyPlayerId,
+			-300 - (40 * GetLength(GetKeys(resourceInfoMap))),
+			24,
+			0xffffff,
+			nil,
+			"Portrait",
+			MSG_Right);
 	}
 }
 

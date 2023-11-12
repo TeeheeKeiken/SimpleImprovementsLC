@@ -33,7 +33,7 @@ protected func ControlCommand(commandName, targetObject, targetX, targetY, targe
 			{
 				distance = 50;
 			}
-			
+
 			AddCommand(this, "Construct", nil, targetX, targetY, nil, nil, targetId);
 			AcquireComponents(objectComponents, availableInventorySlotsCount, distance);
 
