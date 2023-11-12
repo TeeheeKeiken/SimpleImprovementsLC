@@ -24,6 +24,11 @@ protected func FxO2Timer()
 	if (LowO2())
 	{
 		ShowO2WarningMessages();
+
+		if (this != GetCursor(GetOwner()))
+		{
+			TryEnterClosestO2Source();
+		}
 	}
 
 	if (previousO2 > 0 && O2 <= 0)
@@ -42,6 +47,32 @@ protected func FxO2Stop(object pTarget, int iEffectNumber, int iReason, bool fTe
 	_inherited(pTarget, iEffectNumber, iReason, fTemp);
 
 	HandleLowO2Warning();
+}
+
+private func TryEnterClosestO2Source()
+{
+	if (GetCommand(this) == "Enter" && GetCommand(this, 1)->~HasO2())
+	{
+		return true;
+	}
+
+	// TODO: Consider other oxygen sources (Trees, items(?))
+	var closestO2Source = FindObject2(
+		Find_Distance(200),
+		Find_OCF(OCF_Entrance),
+		Find_Func("HasO2"),
+		Find_Func("CanOpen", this),
+		Find_Not(Find_Func("RejectEntrance", this)),
+		Find_Not(Find_Func("IsFullOfClonks", this)),
+		Sort_Distance());
+
+	if (closestO2Source == nil)
+	{
+		return false;
+	}
+	
+	SetCommand(this, "Enter", closestO2Source);
+	return true;
 }
 
 private func GetWarningColor(int current, int expected)
