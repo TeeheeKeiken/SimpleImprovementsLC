@@ -5,6 +5,11 @@
 
 protected func ControlCommand(commandName, targetObject, targetX, targetY, targetObject2, data)
 {
+	if (ObjectCount(CNMT) <= 0)
+	{
+		return _inherited(...);
+	}
+
 	// Handle drag & drop construction
 	if (commandName == "Construct")
 	{
@@ -51,11 +56,16 @@ protected func ControlCommand(commandName, targetObject, targetX, targetY, targe
 		}
 	}
 
-	return _inherited(commandName, targetObject, targetX, targetY, targetObject2, data);
+	return _inherited(...);
 }
 
 protected func BuildNeedsMaterial(id itemId, int amount)
 {
+	if (ObjectCount(CNMT) <= 0)
+	{
+		return _inherited(...);
+	}
+
 	var commandName = GetCommand(this);
 	var target = GetCommand(this, 1);
 
@@ -63,7 +73,7 @@ protected func BuildNeedsMaterial(id itemId, int amount)
 
 	if (availableInventorySlotsCount <= 0)
 	{
-		return _inherited(itemId, amount);
+		return _inherited(...);
 	}
 
 	var objectComponents = GetRequiredComponents(target);
