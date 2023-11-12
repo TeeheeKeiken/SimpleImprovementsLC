@@ -5,6 +5,11 @@
 
 static ISB_SI_PlayerResourceMap;
 
+global func ISB_SI_GetResourceColorModulation(id itemId)
+{
+	return _inherited(itemId);
+}
+
 public func Collection2(object item)
 {
 	if (item->~ISB_IS_IsResource())
@@ -71,7 +76,7 @@ private func IncreaseResourceCount(int playerId, object item)
 	playerResourceArrays[itemId] = resourceArray;
 	ISB_SI_PlayerResourceMap[playerId] = playerResourceArrays;
 
-	UpdateResourceDisplay(playerId);	
+	UpdateResourceDisplay(playerId);
 }
 
 private func DecreaseResourceCount(int playerId, object item)
@@ -142,16 +147,28 @@ private func UpdateResourceDisplay(int playerId)
 	for (var itemId, count in resourceInfoMap)
 	{
 		var format;
+
 		if (count > 0)
 		{
-			format = "%s {{%i}} %d";
+			format = "%s %s %d";
 		}
 		else
 		{
-			format = "%s {{%i}} <c 8a8a8a>%d</c>";
+			format = "%s %s <c 8a8a8a>%d</c>";
 		}
 
-		message = Format(format, message, itemId, count);
+		var icon;
+		var color = ISB_SI_GetResourceColorModulation(itemId);
+		if (color == nil)
+		{
+			icon = Format("{{%i}}", itemId);
+		}
+		else
+		{
+			icon = Format("<c %x>{{%i}}</c>", color, itemId);
+		}
+
+		message = Format(format, message, icon, count);
 	}
 
 	for (var friendlyPlayerId in friendlyPlayerIds)
