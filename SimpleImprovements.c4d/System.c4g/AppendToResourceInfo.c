@@ -103,25 +103,44 @@ private func DecreaseResourceCount(int playerId, object item)
 
 private func UpdateResourceDisplay(int playerId)
 {
-	var playerResourceMaps = ISB_SI_PlayerResourceMap[playerId];
-
-	if (playerResourceMaps == nil)
+	var playerCount = GetPlayerCount(C4PT_User);
+	var friendlyPlayerIds = [];
+	for (var i = 0; i < playerCount; i++)
 	{
-		return;
+		 var otherPlayerId = GetPlayerByIndex(i, C4PT_User);
+		 if (!Hostile(playerId, otherPlayerId, false))
+		 {
+			 friendlyPlayerIds[] = otherPlayerId;
+		 }
 	}
 
-	var message = "@";
-	for (var itemId, itemMap in playerResourceMaps)
+	var resourceInfoMap = {};
+	for (var friendlyPlayerId in friendlyPlayerIds)
 	{
-		var count = 0;
-		for (var value in GetValues(itemMap))
+		var playerResourceMaps = ISB_SI_PlayerResourceMap[friendlyPlayerId];
+
+		if (playerResourceMaps != nil)
 		{
-			if (value != nil)
+			for (var itemId, itemMap in playerResourceMaps)
 			{
-				count += value;
+				var count = 0;
+				for (var value in GetValues(itemMap))
+				{
+					if (value != nil)
+					{
+						count += value;
+					}
+				}
+
+				var totalCount = resourceInfoMap[itemId] ?? 0;
+				resourceInfoMap[itemId] = totalCount + count;
 			}
 		}
-
+	}
+	
+	var message = "@";
+	for (var itemId, count in resourceInfoMap)
+	{
 		var format;
 		if (count > 0)
 		{
@@ -134,6 +153,9 @@ private func UpdateResourceDisplay(int playerId)
 
 		message = Format(format, message, itemId, count);
 	}
-	
-	CustomMessage(message, nil, playerId, -200 - (40 * GetLength(GetKeys(playerResourceMaps))), 24, 0xffffff, nil, "Portrait", MSG_Right);
+
+	for (var friendlyPlayerId in friendlyPlayerIds)
+	{
+		CustomMessage(message, nil, friendlyPlayerId, -200 - (40 * GetLength(GetKeys(resourceInfoMap))), 24, 0xffffff, nil, "Portrait", MSG_Right);
+	}
 }
