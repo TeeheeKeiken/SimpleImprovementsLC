@@ -144,19 +144,25 @@ private func UpdateResourceDisplay(int playerId)
 	}
 	
 	var message = "@";
+	var isFirstItem = true;
 	for (var itemId, count in resourceInfoMap)
 	{
-		var format;
+		if (!isFirstItem)
+		{
+			message ..= " ";
+		}
+
+		var format = "%s";
 		
 		var color = ISB_SI_GetResourceColorModulation(itemId);
 		if (count > 0)
 		{
-			format = "%s %s %d";
+			format ..= " %d";
 		}
 		else
 		{
 			color = GetBlendedColor(color ?? 0xffffff, 0x646464);
-			format = "%s %s <c 8a8a8a>%d</c>";
+			format ..= " <c 8a8a8a>%d</c>";
 		}
 
 		var icon;
@@ -169,7 +175,8 @@ private func UpdateResourceDisplay(int playerId)
 			icon = Format("<c %x>{{%i}}</c>", color, itemId);
 		}
 
-		message = Format(format, message, icon, count);
+		message ..= Format(format, icon, count);
+		isFirstItem = false;
 	}
 
 	for (var friendlyPlayerId in friendlyPlayerIds)
